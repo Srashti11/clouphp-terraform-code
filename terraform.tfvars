@@ -57,3 +57,15 @@ db_skip_final_snapshot    = true
 db_multi_az               = false
 db_storage_encrypted      = true
 
+
+role_name              = "ec2-ecr-ssm-ecs-full-access-role"
+instance_profile_name  = "ec2-full-access-instance-profile"
+
+ecr_policy_arn         = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+ssm_policy_arn         = "arn:aws:iam::aws:policy/AmazonSSMFullAccess"
+ecs_policy_arn         = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+
+log_group_name             = "/ecs/cloudphp-staging"
+log_group_retention_in_days = 7
+
+
