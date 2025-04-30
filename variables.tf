@@ -303,6 +303,45 @@ variable "db_storage_encrypted" {
   
 }
 
+variable "role_name" {
+  description = "The name of the IAM role"
+  type        = string
+}
+
+variable "instance_profile_name" {
+  description = "The name of the IAM instance profile"
+  type        = string
+}
+
+variable "ecr_policy_arn" {
+  description = "The ARN of the ECR full access policy"
+  type        = string
+}
+
+variable "ssm_policy_arn" {
+  description = "The ARN of the SSM full access policy"
+  type        = string
+}
+
+variable "ecs_policy_arn" {
+  description = "The ARN of the ECS full access policy"
+  type        = string
+}
+
+variable "log_group_name" {
+  description = "Name of the CloudWatch Log Group for ECS task logs"
+  type        = string
+}
+
+# Log Group Retention Days
+variable "log_group_retention_in_days" {
+  description = "Retention time in days for log events"
+  type        = number
+  default     = 7
+}
+
+
+
 
 
 
