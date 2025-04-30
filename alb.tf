@@ -6,9 +6,7 @@ resource "aws_lb" "cloudphp_staging_lb" {
   subnets            = [aws_subnet.pub_sub_1.id, aws_subnet.private_sub_2.id]
   enable_deletion_protection = false
 
-  tags = {
-    Name = "MyAppLoadBalancer"
-  }
+
 }
 
 resource "aws_lb_target_group" "cloudphp_staging_lb_target_group" {
