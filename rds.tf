@@ -9,6 +9,9 @@ resource "aws_security_group" "cloudphp_staging_rds_SG" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
+
+
+
   egress {
     from_port   = 0
     to_port     = 0
