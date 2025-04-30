@@ -16,6 +16,11 @@ resource "aws_iam_role" "ecs_task_exec_role" {
   })
 }
 
+resource "aws_cloudwatch_log_group" "cloudphp_log_group" {
+  name              = "ecs-log-group"
+  retention_in_days = 7
+}
+
 resource "aws_iam_role_policy_attachment" "ecs_task_exec_attach" {
   role       = aws_iam_role.ecs_task_exec_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -40,7 +45,16 @@ resource "aws_ecs_task_definition" "cloudphp_staging_task" {
           hostPort      = var.container_port
           protocol      = "tcp"
         }
-      ]
+      ],
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.cloudphp_log_group.name
+          awslogs-region        = "us-east-1"
+          awslogs-stream-prefix = var.ecs_container_name
+        }
+      }
     }
   ])
 }
