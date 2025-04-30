@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_CREDENTIALS_ID = 'b5ce525e-ac2e-4f2f-b12a-77452d24a64f'   // <-- Jenkins Credentials ID for GitHub
+    }
+
+    stages {
+        stage('Clone GitHub Repo') {
+            steps {
+                git credentialsId: "${GIT_CREDENTIALS_ID}", branch: 'main', url: 'https://github.com/Srashti11/Srashti-s-2-years-project.git'
+            }
+        }
+
+        stage('Docker Build and Push to ECR') {
+            steps {
+                script {
+                    sh '''
+                    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 173923733680.dkr.ecr.us-east-1.amazonaws.com
+                    
+                    docker build -f /var/lib/jenkins/workspace/cloudphp-staging/PHP-MYSQL-User-Login-System-main/Dockerfile -t cloudphp-staging-repo /var/lib/jenkins/workspace/cloudphp-staging/PHP-MYSQL-User-Login-System-main
+                   
+                    docker tag cloudphp-staging-repo:latest 173923733680.dkr.ecr.us-east-1.amazonaws.com/cloudphp-staging-repo:latest
+
+                    docker push 173923733680.dkr.ecr.us-east-1.amazonaws.com/cloudphp-staging-repo:latest
+
+                   
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to ECS') {
+            steps {
+                script {
+                    sh '''
+                    aws ecs update-service \
+                      --cluster cloudphp-staging-ecs-cluster \
+                      --service cloudphp-staging-ecs-service \
+                      --force-new-deployment \
+                      --region us-east-1
+                    '''
+                }
+            }
+        }
+    }
+}
